@@ -15,11 +15,13 @@ public class Lab4Application {
 
 	@Bean
 	CommandLineRunner init(UserRepository userRepository){
-	    return (evt) -> {
+	    return (e) -> {
 	        User user = new User();
 	        user.setId(1L);
 	        user.setPasswordHash("1234".hashCode());
 	        userRepository.save(user);
         };
     }
+
+
 }

@@ -8,19 +8,35 @@ import com.pip.lab4.repository.CheckRepository;
 import com.pip.lab4.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins = "*")
 public class JsonController {
     private Gson gson = new Gson();
     private UserRepository userRepository;
     private CheckRepository checkRepository;
+    private UserSession userSession;
 
 
     @Autowired
-    public JsonController(UserRepository userRepository, CheckRepository checkRepository){
+    public JsonController(UserRepository userRepository, CheckRepository checkRepository, UserSession userSession){
         this.userRepository = userRepository;
         this.checkRepository = checkRepository;
+        this.userSession = userSession;
+    }
+
+    @RequestMapping(value = "/logout")
+    public void logout(){
+        userSession.setLoggedIn(false);
+    }
+
+    @RequestMapping(value = "/islogged", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String isLogged(){
+        return gson.toJson(userSession.isLoggedIn());
     }
 
     @RequestMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -33,11 +49,13 @@ public class JsonController {
         user.setId(Long.valueOf(id));
         user.setPasswordHash(password.hashCode());
         userRepository.save(user);
+        userSession.setLoggedIn(true);
         return gson.toJson(true);
     }
 
     @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public String login(@RequestParam("id") String id, @RequestParam("password") String password){
+
         User user;
         if ((user = userRepository.findById(Long.valueOf(id))) == null){
             return gson.toJson(false);
@@ -45,6 +63,7 @@ public class JsonController {
         if (user.getPasswordHash() != password.hashCode()){
             return gson.toJson(false);
         }
+        userSession.setLoggedIn(true);
         return gson.toJson(true);
     }
 
