@@ -31,7 +31,7 @@ public class JsonController {
 
     @RequestMapping(value = "/logout")
     public void logout(){
-        userSession.setLoggedIn(false);
+        userSession.setUser(null);
     }
 
     @RequestMapping(value = "/islogged", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +49,7 @@ public class JsonController {
         user.setId(Long.valueOf(id));
         user.setPasswordHash(password.hashCode());
         userRepository.save(user);
-        userSession.setLoggedIn(true);
+        userSession.setUser(user.getId());
         return gson.toJson(true);
     }
 
@@ -63,20 +63,19 @@ public class JsonController {
         if (user.getPasswordHash() != password.hashCode()){
             return gson.toJson(false);
         }
-        userSession.setLoggedIn(true);
+        userSession.setUser(user.getId());
         return gson.toJson(true);
     }
 
     @RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE)
     public String check(@RequestParam("x") String x,
                         @RequestParam("y") String y,
-                        @RequestParam("r") String r,
-                        @RequestParam("user") String user){
+                        @RequestParam("r") String r){
         Checks myCheck = new Checks();
         myCheck.setX(Double.parseDouble(x));
         myCheck.setY(Double.parseDouble(y));
         myCheck.setR(Double.parseDouble(r));
-        myCheck.setUser(Long.valueOf(user));
+        myCheck.setUser(userSession.getUser());
         //TODO checking the values
         boolean result = true;
         myCheck.setResult(result);
@@ -85,8 +84,8 @@ public class JsonController {
     }
 
     @RequestMapping(value = "/previousChecks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String previousChecks(@RequestParam("user") String user){
-        return gson.toJson(checkRepository.findAllByUserEquals(Long.valueOf(user)));
+    public String previousChecks(){
+        return gson.toJson(checkRepository.findAllByUserEquals(userSession.getUser()));
     }
 
 }

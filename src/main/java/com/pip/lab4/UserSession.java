@@ -6,13 +6,17 @@ import org.springframework.web.context.annotation.SessionScope;
 @Component
 @SessionScope
 public class UserSession {
-    private boolean loggedIn;
-
-    boolean isLoggedIn() {
-        return loggedIn;
+    Long getUser() {
+        return user;
     }
 
-    void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    private Long user;
+
+    boolean isLoggedIn() {
+        return user != null;
+    }
+
+    void setUser(Long user) {
+        this.user = user;
     }
 }
