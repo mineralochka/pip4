@@ -19,24 +19,12 @@ public class JsonController {
     private Gson gson = new Gson();
     private UserRepository userRepository;
     private CheckRepository checkRepository;
-    private UserSession userSession;
 
 
     @Autowired
-    public JsonController(UserRepository userRepository, CheckRepository checkRepository, UserSession userSession){
+    public JsonController(UserRepository userRepository, CheckRepository checkRepository){
         this.userRepository = userRepository;
         this.checkRepository = checkRepository;
-        this.userSession = userSession;
-    }
-
-    @RequestMapping(value = "/logout")
-    public void logout(){
-        userSession.setUser(null);
-    }
-
-    @RequestMapping(value = "/islogged", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String isLogged(){
-        return gson.toJson(userSession.isLoggedIn());
     }
 
     @RequestMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -49,7 +37,6 @@ public class JsonController {
         user.setId(Long.valueOf(id));
         user.setPasswordHash(password.hashCode());
         userRepository.save(user);
-        userSession.setUser(user.getId());
         return gson.toJson(true);
     }
 
@@ -63,19 +50,19 @@ public class JsonController {
         if (user.getPasswordHash() != password.hashCode()){
             return gson.toJson(false);
         }
-        userSession.setUser(user.getId());
         return gson.toJson(true);
     }
 
     @RequestMapping(value = "/check", produces = MediaType.APPLICATION_JSON_VALUE)
     public String check(@RequestParam("x") String x,
                         @RequestParam("y") String y,
-                        @RequestParam("r") String r){
+                        @RequestParam("r") String r,
+                        @RequestParam("user") String user){
         Checks myCheck = new Checks();
         myCheck.setX(Double.parseDouble(x));
         myCheck.setY(Double.parseDouble(y));
         myCheck.setR(Double.parseDouble(r));
-        myCheck.setUser(userSession.getUser());
+        myCheck.setUser(Long.valueOf(user));
         //TODO checking the values
         boolean result = true;
         myCheck.setResult(result);
@@ -84,8 +71,8 @@ public class JsonController {
     }
 
     @RequestMapping(value = "/previousChecks", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String previousChecks(){
-        return gson.toJson(checkRepository.findAllByUserEquals(userSession.getUser()));
+    public String previousChecks(@RequestParam("user") String user){
+        return gson.toJson(checkRepository.findAllByUserEquals(Long.valueOf(user)));
     }
 
 }
