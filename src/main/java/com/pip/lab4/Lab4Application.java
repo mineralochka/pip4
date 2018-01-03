@@ -1,6 +1,6 @@
 package com.pip.lab4;
 
-import com.pip.lab4.entity.User;
+import com.pip.lab4.entity.UserAccount;
 import com.pip.lab4.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +16,7 @@ public class Lab4Application {
 	@Bean
 	CommandLineRunner init(UserRepository userRepository){
 	    return (e) -> {
-	        User user = new User();
+	        UserAccount user = new UserAccount();
 	        user.setId(1L);
 	        user.setPasswordHash("1234".hashCode());
 	        userRepository.save(user);

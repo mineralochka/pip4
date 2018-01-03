@@ -15,7 +15,18 @@ public class Checks {
     private double y;
     private double r;
     private boolean result;
-    private Long user;
+    private Long userId;
+
+    public Checks(){
+
+    }
+
+    public Checks(Double x, Double y, Double r, Long userId) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.userId = userId;
+    }
 
     public Long getId() {
         return id;
@@ -57,11 +68,11 @@ public class Checks {
         this.result = result;
     }
 
-    public Long getUser() {
-        return user;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(Long user) {
-        this.user = user;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

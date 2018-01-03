@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface CheckRepository extends JpaRepository<Checks, Long> {
-    List<Checks> findAllByUserEquals(Long id);
+    List<Checks> findAllByUserIdEquals(Long id);
 }
