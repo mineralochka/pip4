@@ -75,6 +75,11 @@ public class JsonController {
         Double x = Double.parseDouble(string_x);
         Double y = Double.parseDouble(string_y);
         Double r = Double.parseDouble(string_r);
+        if (r < 0){
+            x = -x;
+            y = -y;
+            r = -r;
+        }
         boolean result = false;
         if (x <= 0 && y <= 0 && y >= (-2 * x - r)) {
             result = true;
