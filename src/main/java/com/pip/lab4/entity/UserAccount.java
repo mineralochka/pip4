@@ -8,7 +8,7 @@ public class UserAccount {
     @Id
     private Long id;
 
-    private Integer passwordHash;
+    private String passwordHash;
 
     public Long getId() {
         return id;
@@ -18,11 +18,11 @@ public class UserAccount {
         this.id = id;
     }
 
-    public Integer getPasswordHash() {
+    public String getPasswordHash() {
         return passwordHash;
     }
 
-    public void setPasswordHash(Integer passwordHash) {
+    public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
 }

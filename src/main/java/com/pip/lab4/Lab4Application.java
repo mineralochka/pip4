@@ -6,9 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class Lab4Application {
+
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 	public static void main(String[] args) {
         SpringApplication.run(Lab4Application.class, args);
 	}
@@ -18,10 +22,8 @@ public class Lab4Application {
 	    return (e) -> {
 	        UserAccount user = new UserAccount();
 	        user.setId(1L);
-	        user.setPasswordHash("1234".hashCode());
+	        user.setPasswordHash(passwordEncoder.encode("1234"));
 	        userRepository.save(user);
         };
     }
-
-
 }

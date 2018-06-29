@@ -11,10 +11,15 @@ public class Checks {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
     private double x;
+
     private double y;
+
     private double r;
+
     private boolean result;
+
     private Long userId;
 
     public Checks(){
